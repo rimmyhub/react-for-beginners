@@ -8,21 +8,37 @@
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
   <script type="text/babel">
     function App() {
-      const [counter, setCounter] = React.useState(0);
-      // const date =React.useState() 두개의 배열이 나오는데 왼쪽이 데이터고 오른쪽이 data를 바꿀때 사용하는 함수 (0)은 초기 값
-
-      const onClick = () => {
-        // setCounter(counter + 1); // 1. 직접 값을 설정하기
-        setCounter(
-          (current) =>
-            // 2. 함수를 전달하기
-            current + 1
-        );
+      const [minutes, setMinutes] = React.useState(0);
+      const onChange = (event) => {
+        //event를 console.log로 찍으면 이것저것 나옴
+        setMinutes(event.target.value);
       };
+
+      const reset = () => setMinutes(0);
       return (
         <div>
-          <h3>Total clicks: {counter}</h3>
-          <button onClick={onClick}>Click me</button>
+          <h1>super converter</h1>
+          <div>
+            <label htmlFor="minutes">minutes</label>
+            <input
+              value={minutes}
+              id="minutes"
+              placeholder="Minutes"
+              type="number"
+              onChange={onChange}
+            />
+          </div>
+
+          <div>
+            <label htmlFor="hours">Hours</label>
+            <input
+              value={Math.round(minutes / 60)} //반올림
+              id="hours"
+              placeholder="Hours"
+              type="number"
+            />
+          </div>
+          <button onClick={reset}>Reset</button>
         </div>
       );
     }
