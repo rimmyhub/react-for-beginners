@@ -3,23 +3,27 @@
   <body>
     <div id="root"></div>
   </body>
-  <script src="https://unpkg.com/react@17.0.2/umd/react.production.min.js"></script>
+  <!-- 수정 -->
+  <script src="https://unpkg.com/react@17.0.2/umd/react.development.js "></script>
   <script src="https://unpkg.com/react-dom@17.0.2/umd/react-dom.production.min.js"></script>
+  <!-- 타입알려주기 추가-->
+  <script src="https://unpkg.com/prop-types@15.7.2/prop-types.js"></script>
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
   <script type="text/babel">
     // 자식
-    function Btn({ text, onClick }) {
+    // fontSize = 14 이런식으로 기본값을 설정할 수 잇음  <Btn text={"continue"} /> 만 설정이 안되어잇으니께
+    function Btn({ text, fontSize = 14 }) {
       //props를 설정해주어야함
       console.log(text, "render");
       return (
         <button
-          onClick={onClick} //props를 설정해주어야함
           style={{
             backgroundColor: "tomato",
             color: "white",
             padding: "10px 20px",
             border: 0,
             borderRadius: 10,
+            fontSize,
           }}
         >
           {text}
@@ -27,19 +31,19 @@
       );
     }
 
-    // React memo <MemoizedBtn text="Continue" /> 다시 재 render하지 않음
-    // 렌더를 반복하지 않으므로서 느려지지 않게 관리할 수 있음
-    const MemoizedBtn = React.memo(Btn);
+    // 타입 알려주기
+    Btn.propTypes = {
+      text: PropTypes.string.isRequired,
+      // 확실히 모두 랜더해야한다면 누군가 모두 이 컴포넌트를 render해야한다면 isRequired해야함
+      // fontSize 입력 없을 시 필수라고 표시되엇지만 실제 값은 undefined라고 나옴
+      fontSize: PropTypes.number.isRequired,
+    };
 
     function App() {
-      //부모의 상태를 바꾸는 함수를 만들었고 자식이 실행하는 구조
-      const [value, setValue] = React.useState("save Changes");
-      const changeValue = () => setValue("Revert Changes");
-
       return (
         <div>
-          <MemoizedBtn text={value} onClick={changeValue} />
-          <MemoizedBtn text="Continue" />
+          <Btn text="save changes" fontSize={18} />
+          <Btn text={"continue"} />
         </div>
       );
     }
