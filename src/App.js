@@ -2,21 +2,20 @@ import { useState, useEffect } from "react";
 
 // 한번만 실행
 function Hello() {
-  function byFn() {
-    console.log("bye :(");
-  }
+  //1-1. 1-1과 같음 사람들은 이 방식을 선호함
+  useEffect(() => {
+    console.log("hi :)");
+    return () => console.log("bye :(");
+  }, []);
 
-  function hiFn() {
-    console.log("created :)");
-    return byFn; //파괴될때도 실행하고 싶을때 return해야함
-  }
-  useEffect(hiFn, []);
+  //1-2. 1-1과 같음
+  useEffect(function () {
+    console.log("hi :)");
+    return function () {
+      console.log("bye :(");
+    };
+  }, []);
 
-  // useEffect(() => {
-  //   console.log("created :)");
-  //   return () => console.log("destroyed :("); //cleanup function
-  //   // 나의 component(요소)가 없어질때 결과를 보낼 수 있음
-  // }, []);
   return <h1>hello</h1>;
 }
 
