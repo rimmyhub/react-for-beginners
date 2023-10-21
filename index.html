@@ -7,16 +7,19 @@
   <script src="https://unpkg.com/react-dom@17.0.2/umd/react-dom.production.min.js"></script>
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
   <script type="text/babel">
-    function Btn({ text, big }) {
+    // 자식
+    function Btn({ text, onClick }) {
+      //props를 설정해주어야함
+      console.log(text, "render");
       return (
         <button
+          onClick={onClick} //props를 설정해주어야함
           style={{
             backgroundColor: "tomato",
             color: "white",
             padding: "10px 20px",
             border: 0,
             borderRadius: 10,
-            fontSize: big ? 18 : 16,
           }}
         >
           {text}
@@ -24,11 +27,19 @@
       );
     }
 
+    // React memo <MemoizedBtn text="Continue" /> 다시 재 render하지 않음
+    // 렌더를 반복하지 않으므로서 느려지지 않게 관리할 수 있음
+    const MemoizedBtn = React.memo(Btn);
+
     function App() {
+      //부모의 상태를 바꾸는 함수를 만들었고 자식이 실행하는 구조
+      const [value, setValue] = React.useState("save Changes");
+      const changeValue = () => setValue("Revert Changes");
+
       return (
         <div>
-          <Btn text="Save Changes" big={true} />
-          <Btn text="Continue" big={false} />
+          <MemoizedBtn text={value} onClick={changeValue} />
+          <MemoizedBtn text="Continue" />
         </div>
       );
     }
