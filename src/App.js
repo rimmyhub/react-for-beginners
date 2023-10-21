@@ -1,48 +1,33 @@
 import { useState, useEffect } from "react";
 
+// 한번만 실행
+function Hello() {
+  function byFn() {
+    console.log("bye :(");
+  }
+
+  function hiFn() {
+    console.log("created :)");
+    return byFn; //파괴될때도 실행하고 싶을때 return해야함
+  }
+  useEffect(hiFn, []);
+
+  // useEffect(() => {
+  //   console.log("created :)");
+  //   return () => console.log("destroyed :("); //cleanup function
+  //   // 나의 component(요소)가 없어질때 결과를 보낼 수 있음
+  // }, []);
+  return <h1>hello</h1>;
+}
+
 function App() {
-  const [counter, setValue] = useState(0);
-  const [keyword, setKeyword] = useState("");
-
-  const onClick = () => setValue((prev) => prev + 1);
-
-  const onChange = (event) => setKeyword(event.target.value);
-
-  // 한 번만 실행됨
-  useEffect(() => {
-    console.log("CALL THE API");
-  }, []);
-
-  useEffect(() => {
-    if (keyword !== "" && keyword.length > 5) {
-      //keyword가 빈값이 아니라면 그때 키워드 검색, 길이가 5보다 길때
-      console.log("SEARCH FOR", keyword);
-    }
-  }, [keyword]);
-  // keyword가 변화할때만, 변화할때 마다 코드 실행
-
-  useEffect(() => {
-    console.log("키워드가 변화할때마다 실행돼요");
-  }, [keyword]);
-
-  useEffect(() => {
-    console.log("카운터가 변화할때 실행돼요");
-  }, [counter]);
-
-  useEffect(() => {
-    console.log("카운터와 키워드가 변화할때 실행돼요");
-  }, [counter, keyword]);
+  const [showing, setShowing] = useState(false);
+  const onClick = () => setShowing((prev) => !prev);
 
   return (
     <div>
-      <input
-        value={keyword}
-        onChange={onChange}
-        type="text"
-        placeholder="search here.."
-      />
-      <h1>{counter}</h1>
-      <button onClick={onClick}>click me</button>
+      {showing ? <Hello /> : null}
+      <button onClick={onClick}>{showing ? "Hide" : "Show"}</button>
     </div>
   );
 }
