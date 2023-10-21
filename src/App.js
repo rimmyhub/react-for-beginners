@@ -1,32 +1,45 @@
 import { useState, useEffect } from "react";
 
-// 한번만 실행
-function Hello() {
-  //1-1. 1-1과 같음 사람들은 이 방식을 선호함
-  useEffect(() => {
-    console.log("hi :)");
-    return () => console.log("bye :(");
-  }, []);
-
-  //1-2. 1-1과 같음
-  useEffect(function () {
-    console.log("hi :)");
-    return function () {
-      console.log("bye :(");
-    };
-  }, []);
-
-  return <h1>hello</h1>;
-}
-
 function App() {
-  const [showing, setShowing] = useState(false);
-  const onClick = () => setShowing((prev) => !prev);
+  const [toDo, setToDo] = useState("");
+  // 여러개의 to를 가질 수 있는 array생성, 기본값 비워져있음
+  const [toDos, setToDos] = useState([]);
+  const onChange = (event) => setToDo(event.target.value); // 값 수정하기
 
+  const onSubmit = (event) => {
+    event.preventDefault(); // 자동으로 새로고침 하는걸 막음
+    if (toDo === "") {
+      // 만약에 todo가 비어있으면 그냥 리턴, 함수를 작동시키지 않게끔
+      return;
+    }
+    // 빈 array에 submit이벤트 실행 시 값이 추가됨
+    setToDos((currentArray) => [toDo, ...currentArray]);
+    // input 비우기
+    setToDo("");
+  };
+
+  console.log(toDos);
+  console.log(toDos.map((item, index) => <li key={index}>{item}</li>));
+  // form은 submit 이벤트를 가지고 있어서 자동으로 새로고침됨
+  // form 안의 버튼들을 모두 실행
   return (
     <div>
-      {showing ? <Hello /> : null}
-      <button onClick={onClick}>{showing ? "Hide" : "Show"}</button>
+      <h1>My To Dos({toDos.length})</h1>
+      <form onSubmit={onSubmit}>
+        <input
+          onChange={onChange}
+          value={toDo}
+          type="text"
+          placeholder="write your to do..."
+        />
+        <button>Add To Do</button>
+      </form>
+      <hr />
+      <ul>
+        {toDos.map((item, index) => (
+          <li key={index}>{item}</li>
+        ))}
+      </ul>
     </div>
   );
 }
